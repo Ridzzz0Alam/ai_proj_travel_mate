@@ -42,9 +42,9 @@
         <path d="M20 5 L23 20 L20 35 L17 20 Z" fill="currentColor" stroke="none"/>
         <path d="M5 20 L20 17 L35 20 L20 23 Z" fill="currentColor" opacity=".45" stroke="none"/>
       </svg>
-      Atlas
+      Travel Mate
     </div>
-    <div class="coords">AI Itinerary Studio</div>
+    <div class="coords">AI Tour Guide</div>
   </header>
 
   <section class="hero">
@@ -65,15 +65,15 @@
     <div class="eyebrow rise d2">
       <span>N 47.37° · E 8.54°</span>
       <span class="route"></span>
-      <span>Plot your route</span>
+      <span>Plan your trip</span>
     </div>
-    <h1 class="rise d3">Tell it where.<br>Get a plan you'd actually <em>take</em>.</h1>
-    <p class="lead rise d4">Describe the trip in your own words — the place, the days, the pace, the budget. Atlas drafts a day-by-day itinerary you can copy or print as a clean travel document.</p>
+    <h1 class="rise d3">Tell it where you want to go.<br>Get a plan you'd actually <em>take</em>.</h1>
+    <p class="lead rise d4">Describe the trip in your own words by giving the place, the days, the pace, the budget. Atlas drafts a day-by-day itinerary you can copy or print as a clean travel document.</p>
   </section>
 
   <section class="panel rise d4">
     <div class="panel-head">
-      <span class="panel-label">Itinerary request</span>
+      <span class="panel-label">Your request</span>
       <span class="status"><span class="dot"></span>Ready</span>
     </div>
 
@@ -84,7 +84,7 @@
     <div class="controls">
       <span class="hint">Press <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to send</span>
       <button id="sendBtn" onclick="sendMessage()">
-        <span id="btnText">Draft my itinerary</span>
+        <span id="btnText">Generate my Travel Plan</span>
         <span id="btnLoader" class="loader hidden"></span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </button>
@@ -93,7 +93,7 @@
     <div class="presets">
       <div class="presets-label">Or start from a sketch</div>
       <div class="tags">
-        <button onclick="setPrompt('5 relaxed days in Kyoto for two — temples, food markets, and one day trip. Mid-range budget, early April.')">Kyoto · 5 days</button>
+        <button onclick="setPrompt('5 relaxed days in Paris for two touristic spots, food markets, and one day trip. Mid-range budget.')">Paris · 5 days</button>
         <button onclick="setPrompt('10-day Italy trip by train: Rome, Florence, and the Amalfi Coast. Good food, some history, not too rushed.')">Italy by rail · 10 days</button>
         <button onclick="setPrompt('Iceland ring road self-drive over 7 days in September. Waterfalls, hot springs, and northern lights if possible.')">Iceland ring road · 7 days</button>
         <button onclick="setPrompt('Long weekend in Lisbon for a first-time visitor on a tight budget. Viewpoints, pastéis, and a beach day.')">Lisbon · long weekend</button>
@@ -132,7 +132,7 @@
     <div id="threadInfo"></div>
   </section>
 
-  <footer>Atlas · plans are suggestions — always double-check hours, prices &amp; visas</footer>
+  <footer>NOTE · plans are suggestions, always double-check hours, prices &amp; visas</footer>
 </div>
 
 <script src="{{ url_for('static', path='script.js') }}"></script>
