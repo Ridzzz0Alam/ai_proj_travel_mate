@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Atlas — AI Travel Planner</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+
+
+</head>
+<body>
+
+<div class="atlas-bg" aria-hidden="true">
+  <svg viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid slice">
+    <g fill="none" stroke="rgba(201,161,90,0.16)" stroke-width="1">
+      <path d="M820,120 q-90,40 -60,150 q30,110 -80,150 q-110,40 -60,170"/>
+      <path d="M880,90 q-140,50 -100,210 q40,150 -120,190 q-140,40 -80,220"/>
+      <path d="M950,70 q-190,60 -140,270 q50,190 -160,230 q-170,45 -100,270"/>
+    </g>
+    <g fill="none" stroke="rgba(90,160,140,0.14)" stroke-width="1">
+      <path d="M120,720 q90,-60 40,-190 q-40,-120 90,-170"/>
+      <path d="M60,760 q140,-80 70,-250 q-50,-150 130,-210"/>
+    </g>
+  </svg>
+</div>
+
+<div class="shell">
+
+  <header class="masthead rise d1">
+    <div class="wordmark">
+      <svg class="compass-mini" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4">
+        <circle cx="20" cy="20" r="17"/>
+        <path d="M20 5 L23 20 L20 35 L17 20 Z" fill="currentColor" stroke="none"/>
+        <path d="M5 20 L20 17 L35 20 L20 23 Z" fill="currentColor" opacity=".45" stroke="none"/>
+      </svg>
+      Atlas
+    </div>
+    <div class="coords">AI Itinerary Studio</div>
+  </header>
+
+  <section class="hero">
+    <svg class="compass-mark rise d2" viewBox="0 0 200 200" fill="none" stroke="currentColor" aria-hidden="true">
+      <circle cx="100" cy="100" r="92" stroke-width="1" opacity=".35"/>
+      <circle cx="100" cy="100" r="70" stroke-width="1" opacity=".25"/>
+      <circle cx="100" cy="100" r="46" stroke-width="1" opacity=".18"/>
+      <path d="M100 14 L110 100 L100 186 L90 100 Z" fill="currentColor" stroke="none" opacity=".9"/>
+      <path d="M14 100 L100 90 L186 100 L100 110 Z" fill="currentColor" stroke="none" opacity=".4"/>
+      <g stroke-width="1" opacity=".5">
+        <line x1="100" y1="8" x2="100" y2="20"/>
+        <line x1="100" y1="180" x2="100" y2="192"/>
+        <line x1="8" y1="100" x2="20" y2="100"/>
+        <line x1="180" y1="100" x2="192" y2="100"/>
+      </g>
+    </svg>
+
+    <div class="eyebrow rise d2">
+      <span>N 47.37° · E 8.54°</span>
+      <span class="route"></span>
+      <span>Plot your route</span>
+    </div>
+    <h1 class="rise d3">Tell it where.<br>Get a plan you'd actually <em>take</em>.</h1>
+    <p class="lead rise d4">Describe the trip in your own words — the place, the days, the pace, the budget. Atlas drafts a day-by-day itinerary you can copy or print as a clean travel document.</p>
+  </section>
+
+  <section class="panel rise d4">
+    <div class="panel-head">
+      <span class="panel-label">Itinerary request</span>
+      <span class="status"><span class="dot"></span>Ready</span>
+    </div>
+
+    <div class="field">
+      <textarea id="userInput" placeholder="e.g. 6 relaxed days in Kyoto for two — temples, food markets, one day trip, mid-range budget, first week of April."></textarea>
+    </div>
+
+    <div class="controls">
+      <span class="hint">Press <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to send</span>
+      <button id="sendBtn" onclick="sendMessage()">
+        <span id="btnText">Draft my itinerary</span>
+        <span id="btnLoader" class="loader hidden"></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+
+    <div class="presets">
+      <div class="presets-label">Or start from a sketch</div>
+      <div class="tags">
+        <button onclick="setPrompt('5 relaxed days in Kyoto for two — temples, food markets, and one day trip. Mid-range budget, early April.')">Kyoto · 5 days</button>
+        <button onclick="setPrompt('10-day Italy trip by train: Rome, Florence, and the Amalfi Coast. Good food, some history, not too rushed.')">Italy by rail · 10 days</button>
+        <button onclick="setPrompt('Iceland ring road self-drive over 7 days in September. Waterfalls, hot springs, and northern lights if possible.')">Iceland ring road · 7 days</button>
+        <button onclick="setPrompt('Long weekend in Lisbon for a first-time visitor on a tight budget. Viewpoints, pastéis, and a beach day.')">Lisbon · long weekend</button>
+      </div>
+    </div>
+
+    <div id="errorBox" class="hidden"></div>
+  </section>
+
+  <section id="resultSection" class="hidden">
+    <div class="result-head">
+      <span class="panel-label">Your itinerary</span>
+      <div class="result-actions">
+        <button class="copy-btn" onclick="copyResult()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          Copy
+        </button>
+        <button class="download-btn" onclick="downloadPDF()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>
+          Download PDF
+        </button>
+      </div>
+    </div>
+
+    <div id="pdfContent">
+      <div class="doc-masthead">
+        <div class="dm-title">Travel Itinerary</div>
+        <div class="dm-meta">
+          Drafted by Atlas<br>
+          <span id="docDate"></span>
+        </div>
+      </div>
+      <div id="resultBox" class="result-box"></div>
+    </div>
+
+    <div id="threadInfo"></div>
+  </section>
+
+  <footer>Atlas · plans are suggestions — always double-check hours, prices &amp; visas</footer>
+</div>
+
+</body>
+</html>
