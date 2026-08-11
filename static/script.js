@@ -5,7 +5,7 @@
    DEMO_MODE = false → uses your real POST /api/travel endpoint
                        (identical contract to your original app.js).
    ========================================================= */
-const DEMO_MODE = true;
+const DEMO_MODE = false;
 
 let currentThreadId = null;
 try { currentThreadId = localStorage.getItem("travel_thread_id") || null; } catch (e) {}
