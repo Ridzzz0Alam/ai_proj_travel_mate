@@ -3,7 +3,7 @@ import traceback
 import uvicorn
 
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
@@ -24,16 +24,20 @@ app.mount(
     name="static"
 )
 
-templates = Jinja2Templates(
-    directory=str(BASE_DIR / "templates")
-)
+templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
+
 
 class TravelRequest(BaseModel):
     message: str
     thread_id: str | None = None
 
 
-@app.get("/api/travel")
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+
+@app.post("/api/travel")
 async def travel_planner(request_data: TravelRequest):
     try:
         user_message = request_data.message.strip()
@@ -41,10 +45,7 @@ async def travel_planner(request_data: TravelRequest):
         if not user_message:
             return JSONResponse(
                 status_code=400,
-                content={
-                    "success": False,
-                    "error": "Message cannot be empty."
-                }
+                content={"success": False, "error": "Message cannot be empty."}
             )
 
         result = run_travel_agent(
@@ -67,33 +68,21 @@ async def travel_planner(request_data: TravelRequest):
     except Exception as e:
         print("ERROR:", e)
         traceback.print_exc()
-
         return JSONResponse(
             status_code=500,
-            content={
-                "success": False,
-                "error": str(e)
-            }
+            content={"success": False, "error": str(e)}
         )
+
 
 @app.get("/health")
 async def health_check():
-    return{
-        "status": "ok",
-        "message": "AI Travel Planner API is running"
-    }
+    return {"status": "ok", "message": "AI Travel Planner API is running"}
 
 
 @app.get("/favicon.ico")
 async def favicon():
-    return JSONResponse(content={})
-
+    return Response(status_code=204)
 
 
 if __name__ == "__main__":
-    uvicorn.run(
-        "app:app",
-        host="127.0.0.1",
-        port=8000,
-        reload=True
-    )
+    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
